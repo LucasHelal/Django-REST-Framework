@@ -2,3 +2,5 @@ Django==1.10.6
 djangorestframework==3.5.4
 Pygments==2.2.0
 httpie==0.9.9
+coreapi==2.2.4
+coreapi-cli==1.0.6

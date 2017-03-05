@@ -7,19 +7,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, detail_route
 
 
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'snippets': reverse('snippets-list', request=request, format=format),
-    })
-
-
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    """Este viewset forncece automaticamente ações de 'list' e 'detail'."""
-
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# @api_view(['GET'])
+# def api_root(request, format=None):
+#     return Response({
+#         'users': reverse('user-list', request=request, format=format),
+#         'snippets': reverse('snippets-list', request=request, format=format),
+#     })
 
 
 class SnippetViewSet(viewsets.ModelViewSet):
@@ -29,9 +22,9 @@ class SnippetViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Snippet.objects.all()
-    serializers_class = SnippetSerializer
+    serializer_class = SnippetSerializer
     permissions_classes = (
-        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 
     @detail_route(renderer_classes=[renderers.StaticHTMLRenderer])
     def highlight(self, request, *args, **kwargs):
@@ -40,6 +33,13 @@ class SnippetViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """Este viewset forncece automaticamente ações de 'list' e 'detail'."""
+
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 # class UserList(generics.ListAPIView):
 #     queryset = User.objects.all()
